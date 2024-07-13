@@ -1,2 +1,2 @@
 main:
-	gcc main.c dynamicArray.c -Wall -Werror
+	gcc main.c dynamicArray.c day3.c -Wall -Werror
