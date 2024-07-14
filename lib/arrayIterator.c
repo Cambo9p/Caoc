@@ -3,8 +3,32 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
+
+void initIterator(ArrayIterator_t *iterator, Array_t *array) {
+    iterator->array = array;
+    iterator->currIndex = 0;
+}
+
+bool hasNext(ArrayIterator_t *iterator) {
+    return iterator->currIndex < iterator->array->currSize;
+}
+
+void *next(ArrayIterator_t *iterator) {
+    if (!hasNext(iterator)) {
+        fprintf(stderr, "Index out of bounds, no index %d \n",
+                iterator->currIndex + 1);
+        exit(1);
+    }
+
+    return iterator->array->ptr[iterator->currIndex++];
+}
+
+void resetIterator(ArrayIterator_t *iterator) {
+    iterator->currIndex = 0;
+} 
+
+/*
 
 void initIterator(ArrayIterator_t *iterator, CharArray_t *array) {
     iterator->array = array;
@@ -20,7 +44,7 @@ bool hasNextCharInLine(ArrayIterator_t *iterator) {
     char *line = iterator->array->ptr[iterator->currLine];
     int lineLen = strlen(line); // TODO: may be better to store this info so we dont need to look it up
 
-    return iterator->currIndex < lineLen;
+    return iterator->currIndex < lineLen - 1; // - 1 so we ignore the \0
 }
 
 char next(ArrayIterator_t *iterator) {
@@ -49,3 +73,5 @@ void resetIterator(ArrayIterator_t *iterator) {
     iterator->currLine = 0;
     iterator->currIndex = 0;
 } 
+ 
+ * */

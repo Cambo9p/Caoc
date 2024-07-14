@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "day3.h"
+#include "days/day3.h"
 
 struct Cord {
     int type; // 1 for num other for symbol

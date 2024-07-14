@@ -1,17 +1,14 @@
-#ifndef ARRAYITERATOR_H
-#define ARRAYITERATOR_H
-#include "dynamicArray.h"
-#include <stdbool.h>
-
+#ifndef CHARARRAYITERATOR_H
+#define CHARARRAYITERATOR_H
 
 typedef struct {
-    CharArray_t *array;
     int currIndex;
     int currLine;
 } ArrayIterator_t;
 
 // initialises the iterator
 void initIterator(ArrayIterator_t *iterator, CharArray_t *array);
+
 
 // Returns true if the array has another line
 bool hasNextline(ArrayIterator_t *iterator);

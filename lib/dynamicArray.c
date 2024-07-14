@@ -3,25 +3,26 @@
 #include <string.h>
 #include <stdio.h>
 
-void initArrayWithSize(CharArray_t *array, int size) {
+void initArrayWithSize(Array_t *array, int size, size_t elementSize) {
     array->maxSize = size;
     array->currSize = 0;
-    array->ptr = (char **)calloc(size, sizeof(char *));
+    array->elementSize = elementSize;
+    array->ptr = (void **)calloc(size, sizeof(void *));
     if (array->ptr == NULL) {
         fprintf(stderr, "Memory allocation failed\n");
         exit(1);
     }
 }
 
-void initArray(CharArray_t *array) {
-    initArrayWithSize(array, 10);
+void initArray(Array_t *array, size_t elementSize) {
+    initArrayWithSize(array, 10, elementSize);
 }
 
-void appendArray(CharArray_t *array, const char *element) {
+void appendArray(Array_t *array, const char *element) {
     // check that we will not go out of bounds
     if (array->currSize == array->maxSize) {
         int newSize = array->maxSize * 2;
-        char **newPtr = (char **)realloc(array->ptr, newSize * sizeof(char *));
+        void **newPtr = (void **)realloc(array->ptr, newSize * sizeof(void *));
         if (newPtr == NULL) {
             fprintf(stderr, "Memory allocation failed\n");
             exit(1);
@@ -30,18 +31,18 @@ void appendArray(CharArray_t *array, const char *element) {
         array->maxSize = newSize;
     }
 
-    array->ptr[array->currSize] = (char *)malloc((strlen(element) + 1) * sizeof(char));
+    array->ptr[array->currSize] = malloc(array->elementSize);
     if (array->ptr[array->currSize] == NULL) {
         fprintf(stderr, "Memory reallocation failed\n");
         exit(1);
     }
-    strcpy(array->ptr[array->currSize], element);
+    memcpy(array->ptr[array->currSize], element, array->elementSize);
     array->currSize++;
 }
 
-void freeArray(CharArray_t *array) {
+void freeArray(Array_t *array, void (*freeElement)(void *)) {
     for (int i = 0; i < array->currSize; i++) {
-        free(array->ptr[i]);
+        freeElement(array->ptr[i]);
     }
     // Free the array itself
     free(array->ptr);
@@ -50,8 +51,8 @@ void freeArray(CharArray_t *array) {
     array->maxSize = 0;
 }
 
-void printArray(CharArray_t *array) {
+void printArray(Array_t *array, void (*printElement)(void *)) {
     for (int i = 0; i < array->currSize; i++) {
-        printf("%s\n", array->ptr[i]);
+        printElement(array->ptr[i]);
     }
 }
