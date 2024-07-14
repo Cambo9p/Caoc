@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "dynamicArray.h"
+#include "arrayIterator.h"
 
 struct Cord {
     int type; // 1 for num other for symbol
@@ -8,11 +9,10 @@ struct Cord {
     int end;
 };
 
-
 int solvep1() {
     FILE *fp = fopen("input.txt", "r");
     ssize_t read;
-    char *line;
+    char *line = NULL;
     size_t len = 0;
 
     CharArray_t lines;
@@ -24,8 +24,23 @@ int solvep1() {
         }
         appendArray(&lines, line);
     }
-    printArray(&lines);
     // now we can do stuff 
+
+    ArrayIterator_t iter;
+    initIterator(&iter, &lines);
+
+    while (hasNextline(&iter)) {
+        while (hasNextCharInLine(&iter)) {
+            char ch = next(&iter);
+            printf("%c", ch);
+        }
+        printf("\n");
+
+        if (hasNextline(&iter)) {
+            nextLine(&iter);
+        }
+    }
+
 
     freeArray(&lines);
 

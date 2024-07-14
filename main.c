@@ -10,7 +10,6 @@ struct Cord {
 
 
 int main() {
-
     solvep1();
     return 1;
 }
